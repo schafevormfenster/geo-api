@@ -1,0 +1,48 @@
+{
+  "adminCode1": "12",
+  "adminCode2": "00",
+  "adminCode3": "13075",
+  "adminCode4": "13075125",
+  "adminCodes1": { "ISO3166_2": "MV" },
+  "adminId1": "2872567",
+  "adminId3": "8648415",
+  "adminId4": "6548320",
+  "adminName1": "Mecklenburg-Vorpommern",
+  "adminName2": null,
+  "adminName3": "Vorpommern-Greifswald",
+  "adminName4": "Schmatzin",
+  "adminName5": null,
+  "alternateNames": [
+    {
+      "isPreferredName": true,
+      "name": "http://www.wikidata.org/w/index.php?title=Q15923993",
+      "lang": "link"
+    },
+    { "name": "Q15923993", "lang": "wkdt" }
+  ],
+  "asciiName": "Schlatkow",
+  "astergdem": 30,
+  "bbox": {
+    "east": 13.596436925084316,
+    "south": 53.91253336845012,
+    "north": 53.930520665952976,
+    "west": 13.56588607296256,
+    "accuracyLevel": 0
+  },
+  "continentCode": "EU",
+  "countryCode": "DE",
+  "countryId": "2921044",
+  "countryName": "Deutschland",
+  "fcl": "P",
+  "fclName": "city, village,...",
+  "fcode": "PPL",
+  "fcodeName": "populated place",
+  "geonameId": 2838887,
+  "lat": "53.92153",
+  "lng": "13.58116",
+  "name": "Schlatkow",
+  "population": null,
+  "srtm3": 27,
+  "timezone": { "gmtOffset": 1, "timeZoneId": "Europe/Berlin", "dstOffset": 2 },
+  "toponymName": "Schlatkow"
+}
