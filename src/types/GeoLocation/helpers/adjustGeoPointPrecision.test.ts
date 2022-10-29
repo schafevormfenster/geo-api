@@ -1,4 +1,4 @@
-import { LocatablePrecision } from "../../Abilities/Locateable";
+import { LocatablePrecision } from "../Abilities/Locateable";
 import { adjustGeoPointPrecision } from "./adjustGeoPointPrecision";
 
 describe("should adjust the precision of geo coordinates", () => {

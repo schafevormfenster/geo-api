@@ -124,3 +124,87 @@ export const mockGooglePlaceByPlace: any = {
   utc_offset: 120,
   vicinity: "Groß Bünzow 22, Klein Bünzow",
 };
+
+export const mockGooglePlaceByPlaceWithCommunityEqualsMunicipality: any = {
+  address_components: [
+    {
+      long_name: "6",
+      short_name: "6",
+      types: ["street_number"],
+    },
+    {
+      long_name: "Hauptstraße",
+      short_name: "Hauptstraße",
+      types: ["route"],
+    },
+    {
+      long_name: "Zirchow",
+      short_name: "Zirchow",
+      types: ["locality", "political"],
+    },
+    {
+      long_name: "Landkreis Vorpommern-Greifswald",
+      short_name: "Landkreis Vorpommern-Greifswald",
+      types: ["administrative_area_level_3", "political"],
+    },
+    {
+      long_name: "Mecklenburg-Vorpommern",
+      short_name: "MV",
+      types: ["administrative_area_level_1", "political"],
+    },
+    {
+      long_name: "Deutschland",
+      short_name: "DE",
+      types: ["country", "political"],
+    },
+    {
+      long_name: "17419",
+      short_name: "17419",
+      types: ["postal_code"],
+    },
+  ],
+  adr_address:
+    '<span class="street-address">Hauptstraße 6</span>, <span class="postal-code">17419</span> <span class="locality">Zirchow</span>, <span class="country-name">Deutschland</span>',
+  business_status: "OPERATIONAL",
+  current_opening_hours: {},
+  formatted_address: "Hauptstraße 6, 17419 Zirchow, Deutschland",
+  formatted_phone_number: "038378 28162",
+  geometry: {
+    location: {
+      lat: 53.88987899999999,
+      lng: 14.1385964,
+    },
+    viewport: {
+      northeast: {
+        lat: 53.89119598029149,
+        lng: 14.1400431302915,
+      },
+      southwest: {
+        lat: 53.88849801970849,
+        lng: 14.1373451697085,
+      },
+    },
+  },
+  icon: "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/worship_general-71.png",
+  icon_background_color: "#7B9EB0",
+  icon_mask_base_uri:
+    "https://maps.gstatic.com/mapfiles/place_api/icons/v2/worship_christian_pinlet",
+  international_phone_number: "+49 38378 28162",
+  name: "St. Jakobus-Kirche Zirchow",
+  opening_hours: {},
+  photos: [],
+  place_id: "ChIJgwfcrrhZqkcR51MA48UNaYg",
+  plus_code: {
+    compound_code: "V4QQ+XC Zirchow, Deutschland",
+    global_code: "9F5PV4QQ+XC",
+  },
+  rating: 4.1,
+  reference: "ChIJgwfcrrhZqkcR51MA48UNaYg",
+  reviews: [],
+  types: ["church", "place_of_worship", "point_of_interest", "establishment"],
+  url: "https://maps.google.com/?cid=9829402805280986087",
+  user_ratings_total: 9,
+  utc_offset: 120,
+  vicinity: "Hauptstraße 6, Zirchow",
+  website: "http://pfarramt-ahlbeck-zirchow.de/",
+};

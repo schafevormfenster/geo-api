@@ -22,7 +22,6 @@ export const googleMapsPlaceDetails = async (
     key: <string>process.env.GOOGLE_MAPS_API_KEY,
   };
 
-  console.debug(process.env.GOOGLE_MAPS_API_KEY);
   const query: PlaceDetailsRequest = {
     params: {
       place_id: placeId,

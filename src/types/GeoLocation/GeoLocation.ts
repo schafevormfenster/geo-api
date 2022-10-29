@@ -47,20 +47,32 @@ export type GeoAdministrativeCounty = Pick<
   GeoAdministrativeHierarchyItem,
   "geonameId" | "name"
 >;
-export type GeoAdministrativeMunicipality = Pick<
+type GeoAdministrativeMunicipalityBase = Pick<
   GeoAdministrativeHierarchyItem,
   "geonameId" | "name" | "zip"
 >;
-export type GeoAdministrativeCommunity = Pick<
+export interface GeoAdministrativeMunicipality
+  extends GeoAdministrativeMunicipalityBase {
+  wikidataId: string | null;
+}
+
+type GeoAdministrativeCommunityBase = Pick<
   GeoAdministrativeHierarchyItem,
   "geonameId" | "name"
 >;
 
-export type GeoAdministrativePlace = Pick<
+export interface GeoAdministrativeCommunity
+  extends GeoAdministrativeCommunityBase {
+  wikidataId: string | null;
+}
+
+type GeoAdministrativePlaceBase = Pick<
   GeoAdministrativeHierarchyItem,
   "geonameId" | "name" | "code" | "class"
 >;
-
+export interface GeoAdministrativePlace extends GeoAdministrativePlaceBase {
+  wikidataId: string | null;
+}
 export interface GeoAdministrativeHierarchy {
   country?: GeoAdministrativeCountry;
   state?: GeoAdministrativeState; // state = admin1@geonames

@@ -73,4 +73,16 @@ describe("should transform a google place address components array into a geo ad
     expect(geoAdministrativeHierarchy.country?.ISO3166).toMatch("DE");
     expect(geoAdministrativeHierarchy.country?.geonameId).toBeNull();
   });
+
+  test("returns a transformed hierarchy for a google place with less community and municipality data", () => {
+    const addressComponentsForCommunity: AddressComponent[] = mockGooglePlaces
+      .placeWithLessData.address_components as AddressComponent[];
+    const geoAdministrativeHierarchy: GeoAdministrativeHierarchy =
+      mapGooglemapsAddressComponents2GeoAdministrativeHierarchy(
+        addressComponentsForCommunity
+      );
+    expect(geoAdministrativeHierarchy.place).toBeUndefined();
+    expect(geoAdministrativeHierarchy.community?.name).toMatch("Zirchow");
+    expect(geoAdministrativeHierarchy.municipality?.name).toMatch("Zirchow");
+  });
 });

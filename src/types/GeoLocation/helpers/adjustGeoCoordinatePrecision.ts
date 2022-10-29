@@ -1,4 +1,4 @@
-import { LocatablePrecision } from "../../Abilities/Locateable";
+import { LocatablePrecision } from "../Abilities/Locateable";
 
 export const adjustGeoCoordinatePrecision = (
   coordinate: number,

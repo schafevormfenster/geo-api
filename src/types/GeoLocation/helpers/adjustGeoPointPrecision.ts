@@ -1,4 +1,4 @@
-import { LocatablePrecision } from "../../Abilities/Locateable";
+import { LocatablePrecision } from "../Abilities/Locateable";
 import { GeoPoint } from "../GeoLocation";
 import { adjustGeoCoordinatePrecision } from "./adjustGeoCoordinatePrecision";
 

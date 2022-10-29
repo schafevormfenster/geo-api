@@ -87,6 +87,7 @@ export default async function handler(
       geonameId: null,
       code: null,
       class: null,
+      wikidataId: null,
     },
   };
 

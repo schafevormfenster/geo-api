@@ -10,6 +10,8 @@ import {
   GeoAdministrativeState,
 } from "../../types/GeoLocation/GeoLocation";
 import { GeonameExtended } from "./geonamesGet";
+import { getWikidataId } from "../../types/GeoLocation/helpers/getWikidataId";
+import { getName } from "../../types/GeoLocation/helpers/getName";
 
 export type GeonamesDetermineHierarchyQuery = {
   place?: string;
@@ -54,6 +56,8 @@ export const geonamesDetermineHierarchy = async (
           ISO3166: geonamesCountry?.countryCode,
           name: geonamesCountry?.name || geonamesCountry?.countryName,
         };
+      } else {
+        console.info(`No country found for ${query.country}`);
       }
     }
 
@@ -77,6 +81,8 @@ export const geonamesDetermineHierarchy = async (
           ISO3166: geonamesState?.adminName3,
           name: geonamesState?.name,
         };
+      } else {
+        console.info(`No state found for ${query.state}`);
       }
     }
 
@@ -98,8 +104,10 @@ export const geonamesDetermineHierarchy = async (
         countyAdminCode = parseInt(<string>geonamesCounty?.adminCode3);
         county = {
           geonameId: geonamesCounty.geonameId,
-          name: geonamesCounty.name,
+          name: getName(geonamesCounty),
         };
+      } else {
+        console.info(`No county found for query: ${toString(values(query))}`);
       }
     }
 
@@ -118,15 +126,52 @@ export const geonamesDetermineHierarchy = async (
           featureCode: "ADM4",
         })
       );
-      if (geonamesMunicipality) {
+      if (geonamesMunicipality?.geonameId) {
         municipalityAdminCode = parseInt(
           <string>geonamesMunicipality?.adminCode4
         );
         municipality = {
           geonameId: geonamesMunicipality.geonameId,
-          name: geonamesMunicipality.name,
+          name: getName(geonamesMunicipality),
           zip: null, // TODO: fetch zip later or here or get from google place?
+          wikidataId: getWikidataId(geonamesMunicipality),
         };
+      } else {
+        console.info(
+          `No municipality found for ${query.municipality}, try again with less specific query`
+        );
+        // try again with a query leaving out the county
+        const geonamesMunicipalityLoose: GeonameExtended | undefined = head(
+          await geonamesSearchCached({
+            q: query.municipality,
+            match: "NAME",
+            style: "FULL",
+            adminCode3: "",
+            adminCode1: stateAdminCode?.toString(),
+            country: country?.ISO3166 || query.country,
+            featureClass: "A",
+            featureCode: "ADM4",
+          })
+        );
+        if (geonamesMunicipalityLoose?.geonameId) {
+          // if loose municipality is the better match, so overwrite the county code for folloing queries
+          countyAdminCode = parseInt(
+            <string>geonamesMunicipalityLoose?.adminCode3
+          );
+          municipalityAdminCode = parseInt(
+            <string>geonamesMunicipalityLoose?.adminCode4
+          );
+          municipality = {
+            geonameId: geonamesMunicipalityLoose.geonameId,
+            name: getName(geonamesMunicipalityLoose),
+            zip: null, // TODO: fetch zip later or here or get from google place?
+            wikidataId: getWikidataId(geonamesMunicipalityLoose),
+          };
+        } else {
+          console.info(
+            `No municipality found for ${query.municipality} even with less specific query`
+          );
+        }
       }
     }
 
@@ -134,7 +179,7 @@ export const geonamesDetermineHierarchy = async (
     if (query.community) {
       const geonamesCommunity: GeonameExtended | undefined = head(
         await geonamesSearchCached({
-          q: query.community,
+          q: query.community || query.municipality || municipality?.name,
           match: "NAME",
           style: "FULL",
           adminCode4: municipalityAdminCode?.toString(),
@@ -148,8 +193,37 @@ export const geonamesDetermineHierarchy = async (
       if (geonamesCommunity) {
         community = {
           geonameId: geonamesCommunity.geonameId,
-          name: geonamesCommunity.name,
+          name: getName(geonamesCommunity),
+          wikidataId: getWikidataId(geonamesCommunity),
         };
+      } else {
+        console.info(
+          `No community found for ${query.community}, try with less specific query`
+        );
+        const geonamesCommunityLoose: GeonameExtended | undefined = head(
+          await geonamesSearchCached({
+            q: query.community || query.municipality || municipality?.name,
+            match: "NAME",
+            style: "FULL",
+            adminCode4: municipalityAdminCode?.toString(),
+            adminCode3: countyAdminCode?.toString(),
+            adminCode1: stateAdminCode?.toString(),
+            country: country?.ISO3166 || query.country,
+            featureClass: "P",
+            featureCode: "",
+          })
+        );
+        if (geonamesCommunityLoose) {
+          community = {
+            geonameId: geonamesCommunityLoose.geonameId,
+            name: getName(geonamesCommunityLoose),
+            wikidataId: getWikidataId(geonamesCommunityLoose),
+          };
+        } else {
+          console.info(
+            `No community found for ${query.community} even with less specific query`
+          );
+        }
       }
     }
 
@@ -166,13 +240,13 @@ export const geonamesDetermineHierarchy = async (
           country: country?.ISO3166 || query.country,
         })
       );
-      console.debug(geonamesPlace);
       if (geonamesPlace) {
         place = {
           geonameId: geonamesPlace.geonameId,
-          name: geonamesPlace.name,
+          name: getName(geonamesPlace),
           code: geonamesPlace.fcode,
           class: geonamesPlace.fcl,
+          wikidataId: getWikidataId(geonamesPlace),
         };
       }
     }

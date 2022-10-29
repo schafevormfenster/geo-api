@@ -72,7 +72,9 @@ export const pageArray = (
   totalResultsCount: number,
   pageSize: number
 ): number[] => {
-  const totalPages: number = Math.ceil(totalResultsCount / pageSize);
+  const totalPages: number = totalResultsCount
+    ? Math.ceil(totalResultsCount / pageSize)
+    : 0;
   let pages = [];
   for (let index = 2; index <= totalPages; index++) {
     pages.push(index);
@@ -113,7 +115,7 @@ export const geonamesSearchPage = async (
     return {
       startRow,
       maxRows,
-      totalResultsCount: response.totalResultsCount,
+      totalResultsCount: response.totalResultsCount || 0,
       data: response.geonames,
     };
   } catch (error) {

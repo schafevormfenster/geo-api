@@ -1,5 +1,3 @@
-import { GeoPoint } from "../GeoLocation";
-
 /**
  * Geo point accuracy to use for geo distances indexes and searches.
  *

@@ -58,7 +58,8 @@ export const mapGooglemapsAddressComponents2GeoAdministrativeHierarchy = (
     function (o) {
       return (
         o.types.includes(PlaceType2.sublocality) ||
-        o.types.includes(PlaceType2.sublocality_level_1)
+        o.types.includes(PlaceType2.sublocality_level_1) ||
+        o.types.includes(PlaceType2.locality)
       );
     }
   );
@@ -89,12 +90,14 @@ export const mapGooglemapsAddressComponents2GeoAdministrativeHierarchy = (
           geonameId: null,
           name: municipality.long_name,
           zip: zip?.long_name || null,
+          wikidataId: null,
         }
       : undefined,
     community: community
       ? {
           geonameId: null,
           name: community.long_name || community?.short_name,
+          wikidataId: null,
         }
       : undefined,
     place: undefined,
