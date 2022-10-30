@@ -1,18 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(req: NextRequest) {
-  const basicAuth = req.headers.get("authorization");
+  const token = req.headers.get("Sheep-Token");
   const url = req.nextUrl;
 
-  if (basicAuth) {
-    const authValue = basicAuth.split(" ")[1];
-    const [user, pwd] = atob(authValue).split(":");
-
-    if (user === "4dmin" && pwd === "testpwd123") {
+  if (token) {
+    if (token === "Bääääh") {
       return NextResponse.next();
     }
   }
-  url.pathname = "/api/auth";
-
+  url.pathname = "/api-doc";
   return NextResponse.rewrite(url);
 }
