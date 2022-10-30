@@ -1,12 +1,22 @@
-// middleware.ts with Next.js
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export default function middleware(request: NextRequest) {
-  console.log(JSON.stringify(request, null, 2));
-  return NextResponse.redirect(new URL("/about-2", request.url));
-}
-// config with custom matcher
 export const config = {
-  matcher: "/about/:path*",
+  matcher: ["/", "/index"],
 };
+
+export function middleware(req: NextRequest) {
+  const basicAuth = req.headers.get("authorization");
+  const url = req.nextUrl;
+
+  if (basicAuth) {
+    const authValue = basicAuth.split(" ")[1];
+    const [user, pwd] = atob(authValue).split(":");
+
+    if (user === "4dmin" && pwd === "testpwd123") {
+      return NextResponse.next();
+    }
+  }
+  url.pathname = "/api/auth";
+
+  return NextResponse.rewrite(url);
+}
