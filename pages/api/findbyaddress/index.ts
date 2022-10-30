@@ -111,7 +111,7 @@ export default async function handler(
     process.env.CACHE_STALE_WHILE_REVALIDATE || "120"; // 2 minutes
   res.setHeader(
     "Cache-Control",
-    `s-maxage=${cacheMaxAge}, stale-while-revalidate=${cacheStaleWhileRevalidate}`
+    `max-age=${cacheMaxAge}, s-maxage=${cacheMaxAge}, stale-while-revalidate=${cacheStaleWhileRevalidate}`
   );
 
   return res.status(200).json(geocodedLocation);
