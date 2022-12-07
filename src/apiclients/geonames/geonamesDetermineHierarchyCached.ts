@@ -22,7 +22,7 @@ const memoryCached = async (
       strict: true,
       trim: true,
     });
-    const cacheKey = "geonames_search_" + cacheKeyIdentifier;
+    const cacheKey = "geonames_determinehierarchy_" + cacheKeyIdentifier;
     console.debug(`[Cache] Check local cache for ${cacheKey}.`);
     return localCache.wrap(cacheKey, function () {
       try {
