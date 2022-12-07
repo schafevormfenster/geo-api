@@ -153,7 +153,7 @@ export const geonamesSearch = async (
       await geonamesSearchPage(requestQuery, 0, pageSize)
     );
 
-    if (resultData.totalResultsCount > resultData.data.length) {
+    if (resultData && resultData.totalResultsCount > resultData.data.length) {
       /**
        * split up totalResultsCount by pageSize into a list with offset/maxRows
        * then do a promise all for all pages

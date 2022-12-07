@@ -61,7 +61,7 @@ export const geonamesDetermineHierarchy = async (
       }
     }
 
-    let stateAdminCode: number | undefined;
+    let stateAdminCode: string | undefined;
     let state: GeoAdministrativeState | undefined;
     if (query.state) {
       const geonamesState: GeonameExtended | undefined = head(
@@ -75,7 +75,7 @@ export const geonamesDetermineHierarchy = async (
         })
       );
       if (geonamesState) {
-        stateAdminCode = parseInt(geonamesState?.adminCode1);
+        stateAdminCode = geonamesState?.adminCode1;
         state = {
           geonameId: geonamesState?.geonameId,
           ISO3166: geonamesState?.adminName3,
@@ -86,7 +86,7 @@ export const geonamesDetermineHierarchy = async (
       }
     }
 
-    let countyAdminCode: number | undefined;
+    let countyAdminCode: string | undefined;
     let county: GeoAdministrativeCounty | undefined;
     if (query.county) {
       const geonamesCounty: GeonameExtended | undefined = head(
@@ -94,14 +94,14 @@ export const geonamesDetermineHierarchy = async (
           q: query.county,
           match: "NAME",
           style: "FULL",
-          adminCode1: stateAdminCode?.toString(),
+          adminCode1: stateAdminCode,
           country: country?.ISO3166 || query.country,
           featureClass: "A",
           featureCode: "ADM3",
         })
       );
       if (geonamesCounty) {
-        countyAdminCode = parseInt(<string>geonamesCounty?.adminCode3);
+        countyAdminCode = <string>geonamesCounty?.adminCode3;
         county = {
           geonameId: geonamesCounty.geonameId,
           name: getName(geonamesCounty),
@@ -111,7 +111,7 @@ export const geonamesDetermineHierarchy = async (
       }
     }
 
-    let municipalityAdminCode: number | undefined;
+    let municipalityAdminCode: string | undefined;
     let municipality: GeoAdministrativeMunicipality | undefined;
     if (query.municipality) {
       const geonamesMunicipality: GeonameExtended | undefined = head(
@@ -119,17 +119,15 @@ export const geonamesDetermineHierarchy = async (
           q: query.municipality,
           match: "NAME",
           style: "FULL",
-          adminCode3: countyAdminCode?.toString(),
-          adminCode1: stateAdminCode?.toString(),
+          adminCode3: countyAdminCode,
+          adminCode1: stateAdminCode,
           country: country?.ISO3166 || query.country,
           featureClass: "A",
           featureCode: "ADM4",
         })
       );
       if (geonamesMunicipality?.geonameId) {
-        municipalityAdminCode = parseInt(
-          <string>geonamesMunicipality?.adminCode4
-        );
+        municipalityAdminCode = <string>geonamesMunicipality?.adminCode4;
         municipality = {
           geonameId: geonamesMunicipality.geonameId,
           name: getName(geonamesMunicipality),
@@ -147,7 +145,7 @@ export const geonamesDetermineHierarchy = async (
             match: "NAME",
             style: "FULL",
             adminCode3: "",
-            adminCode1: stateAdminCode?.toString(),
+            adminCode1: stateAdminCode,
             country: country?.ISO3166 || query.country,
             featureClass: "A",
             featureCode: "ADM4",
@@ -155,12 +153,8 @@ export const geonamesDetermineHierarchy = async (
         );
         if (geonamesMunicipalityLoose?.geonameId) {
           // if loose municipality is the better match, so overwrite the county code for folloing queries
-          countyAdminCode = parseInt(
-            <string>geonamesMunicipalityLoose?.adminCode3
-          );
-          municipalityAdminCode = parseInt(
-            <string>geonamesMunicipalityLoose?.adminCode4
-          );
+          countyAdminCode = <string>geonamesMunicipalityLoose?.adminCode3;
+          municipalityAdminCode = <string>geonamesMunicipalityLoose?.adminCode4;
           municipality = {
             geonameId: geonamesMunicipalityLoose.geonameId,
             name: getName(geonamesMunicipalityLoose),
@@ -182,9 +176,9 @@ export const geonamesDetermineHierarchy = async (
           q: query.community || query.municipality || municipality?.name,
           match: "NAME",
           style: "FULL",
-          adminCode4: municipalityAdminCode?.toString(),
-          adminCode3: countyAdminCode?.toString(),
-          adminCode1: stateAdminCode?.toString(),
+          adminCode4: municipalityAdminCode,
+          adminCode3: countyAdminCode,
+          adminCode1: stateAdminCode,
           country: country?.ISO3166 || query.country,
           featureClass: "P",
           featureCode: "PPL",
@@ -205,9 +199,9 @@ export const geonamesDetermineHierarchy = async (
             q: query.community || query.municipality || municipality?.name,
             match: "NAME",
             style: "FULL",
-            adminCode4: municipalityAdminCode?.toString(),
-            adminCode3: countyAdminCode?.toString(),
-            adminCode1: stateAdminCode?.toString(),
+            adminCode4: municipalityAdminCode,
+            adminCode3: countyAdminCode,
+            adminCode1: stateAdminCode,
             country: country?.ISO3166 || query.country,
             featureClass: "P",
             featureCode: "",
@@ -234,9 +228,9 @@ export const geonamesDetermineHierarchy = async (
           q: query.place,
           match: "NAME",
           style: "FULL",
-          adminCode4: municipalityAdminCode?.toString(),
-          adminCode3: countyAdminCode?.toString(),
-          adminCode1: stateAdminCode?.toString(),
+          adminCode4: municipalityAdminCode,
+          adminCode3: countyAdminCode,
+          adminCode1: stateAdminCode,
           country: country?.ISO3166 || query.country,
         })
       );
