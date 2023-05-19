@@ -9,9 +9,7 @@ import {
   GeoLocation,
 } from "../../../src/types/GeoLocation/GeoLocation";
 import { composeGeocodedGeoLocation } from "../../../src/types/GeoLocation/helpers/composeGeocodedGeoLocation";
-import { evaluateLocalPlaceName } from "../../../src/types/GeoLocation/helpers/evaluateLocalPlaceName";
 
-import { googlePlaceToGeoPosition } from "../../../src/types/GeoLocation/transformers/googlePlaceToGeoPosition";
 import { mapGooglemapsAddressComponents2GeoAdministrativeHierarchy } from "../../../src/types/GeoLocation/transformers/mapGooglemapsAddressComponents2GeoAdministrativeHierarchy";
 
 /**
@@ -97,13 +95,31 @@ export default async function handler(
       buildGeonamesDetermineHierarchyQuery(googlePlaceHierarchy)
     )) || undefined;
 
+  // TODO: determine unique community slug
+  // const slug: string = (await geonamesGetUniqueCommunitySlugCached({
+  //   communityName: geonamesHierarchy?.community?.name as string,
+  //   municipalityName: geonamesHierarchy?.municipality?.name as string,
+  //   countryScope: geonamesHierarchy?.country?.ISO3166 as string,
+  // })) as string;
+
   // merge geonames.org hierarchy and google place data into one geo location
   const geocodedLocation: GeoLocation = composeGeocodedGeoLocation(
     location as string, // keep original location
     googlePlace as Place,
     geonamesHierarchy as GeoAdministrativeHierarchy,
     googlePlaceHierarchy as GeoAdministrativeHierarchy
+    // slug as string
   );
+
+  // overwrite municipality zip
+  if (
+    googlePlaceHierarchy?.municipality?.zip &&
+    geocodedLocation?.hierarchy?.municipality &&
+    !geocodedLocation.hierarchy.municipality.zip
+  ) {
+    geocodedLocation.hierarchy.municipality.zip =
+      googlePlaceHierarchy?.municipality?.zip;
+  }
 
   // add cache header to allow cdn caching of responses
   const cacheMaxAge: string = process.env.CACHE_MAX_AGE || "604800"; // 7 days

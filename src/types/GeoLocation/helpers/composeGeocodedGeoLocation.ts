@@ -1,5 +1,9 @@
 import { Place } from "@googlemaps/google-maps-services-js";
-import { GeoAdministrativeHierarchy, GeoLocation } from "../GeoLocation";
+import {
+  GeoAdministrativeHierarchy,
+  GeoLocation,
+  GeoLocationType,
+} from "../GeoLocation";
 import { googlePlaceToGeoPosition } from "../transformers/googlePlaceToGeoPosition";
 import { evaluateLocalPlaceName } from "./evaluateLocalPlaceName";
 
@@ -14,18 +18,42 @@ export const composeGeocodedGeoLocation = (
   geonamesHierarchy: GeoAdministrativeHierarchy,
   googlePlaceHierarchy: GeoAdministrativeHierarchy
 ): GeoLocation => {
+  // evaluate location type
+  let type: GeoLocationType | null;
+  if (geonamesHierarchy?.place) {
+    type = "place";
+  } else if (geonamesHierarchy?.community) {
+    type = "community";
+  } else if (geonamesHierarchy?.municipality) {
+    type = "municipality";
+  } else if (geonamesHierarchy?.county) {
+    type = "county";
+  } else if (geonamesHierarchy?.state) {
+    type = "state";
+  } else if (geonamesHierarchy?.country) {
+    type = "country";
+  } else {
+    type = null;
+  }
+
   //
   let geocodedLocation: GeoLocation = {
-    geonamesId: geonamesHierarchy?.place?.geonameId || null,
+    geonamesId:
+      geonamesHierarchy?.place?.geonameId ||
+      geonamesHierarchy?.community?.geonameId ||
+      null,
     googlePlaceId: googlePlace.place_id as string,
-    wikidataId: null, // TODO: add from geonames query
+    wikidataId:
+      geonamesHierarchy?.place?.wikidataId ||
+      geonamesHierarchy?.community?.wikidataId ||
+      null,
     googleMyBusinessId: null, // TODO: maybe fetch my business id later?
-    slug: null, // TODO: maybe add later, has to be different for each type of location
     name: googlePlace.name || (location as string),
     localName: evaluateLocalPlaceName(
       googlePlaceHierarchy?.place?.name as string,
       geonamesHierarchy?.community?.name as string
     ),
+    type: type || undefined,
     geo: {
       point: googlePlaceToGeoPosition(googlePlace).point,
       box: googlePlaceToGeoPosition(googlePlace).box,

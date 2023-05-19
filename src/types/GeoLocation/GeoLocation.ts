@@ -21,10 +21,17 @@ export interface GeoIdentifiers {
   googlePlaceId: string | null;
   wikidataId: string | null;
   googleMyBusinessId: string | null;
-  slug: string | null;
 }
 
 type GeoAddress = string;
+
+export type GeoLocationType =
+  | "place"
+  | "community"
+  | "municipality"
+  | "county"
+  | "state"
+  | "country";
 
 export interface GeoAdministrativeHierarchyItem {
   geonameId: number | null;
@@ -93,6 +100,7 @@ export interface GeoLocation extends GeoIdentifiers {
   name: string;
   localName?: string;
   asciiName?: string;
+  type?: GeoLocationType;
   geo?: GeoPosition;
   location?: string;
   address?: GeoAddress;

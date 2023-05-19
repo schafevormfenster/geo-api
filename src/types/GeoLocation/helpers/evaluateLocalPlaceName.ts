@@ -14,5 +14,9 @@ export const evaluateLocalPlaceName = (
   );
 
   const localPlaceName: string = partsWithoutCommunity.join(" ").trim();
+
+  // if localPlaceName is empty, return community name
+  if (localPlaceName.length === 0) return communityName;
+
   return localPlaceName;
 };
