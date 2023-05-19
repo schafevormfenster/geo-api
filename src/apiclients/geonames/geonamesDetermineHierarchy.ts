@@ -126,7 +126,10 @@ export const geonamesDetermineHierarchy = async (
           featureCode: "ADM4",
         })
       );
-      if (geonamesMunicipality?.geonameId) {
+      if (
+        geonamesMunicipality?.geonameId &&
+        geonamesMunicipality?.fcode === "ADM4"
+      ) {
         municipalityAdminCode = <string>geonamesMunicipality?.adminCode4;
         municipality = {
           geonameId: geonamesMunicipality.geonameId,
@@ -152,7 +155,7 @@ export const geonamesDetermineHierarchy = async (
           })
         );
         if (geonamesMunicipalityLoose?.geonameId) {
-          // if loose municipality is the better match, so overwrite the county code for folloing queries
+          // if loose municipality is the better match, so overwrite the county code for following queries
           countyAdminCode = <string>geonamesMunicipalityLoose?.adminCode3;
           municipalityAdminCode = <string>geonamesMunicipalityLoose?.adminCode4;
           municipality = {
@@ -235,13 +238,23 @@ export const geonamesDetermineHierarchy = async (
         })
       );
       if (geonamesPlace) {
-        place = {
-          geonameId: geonamesPlace.geonameId,
-          name: getName(geonamesPlace),
-          code: geonamesPlace.fcode,
-          class: geonamesPlace.fcl,
-          wikidataId: getWikidataId(geonamesPlace),
-        };
+        if (geonamesPlace.fcode === "PPL") {
+          // overwrite community with place, because it's a community
+          community = {
+            geonameId: geonamesPlace.geonameId,
+            name: getName(geonamesPlace),
+            wikidataId: getWikidataId(geonamesPlace),
+          };
+          place = undefined;
+        } else {
+          place = {
+            geonameId: geonamesPlace.geonameId,
+            name: getName(geonamesPlace),
+            code: geonamesPlace.fcode,
+            class: geonamesPlace.fcl,
+            wikidataId: getWikidataId(geonamesPlace),
+          };
+        }
       }
     }
 
