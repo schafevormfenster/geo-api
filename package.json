@@ -1,7 +1,7 @@
 {
   "name": "geo-api",
   "description": "Geo API to geocode and structure addresses.",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "private": true,
   "scripts": {
     "dev": "next dev -p 3040",
@@ -11,6 +11,9 @@
     "test": "jest --maxWorkers=25%",
     "test:watch": "jest --watch --maxWorkers=25%",
     "test:ci": "jest --runInBand"
+  },
+  "engines": {
+    "node": "18.x"
   },
   "dependencies": {
     "@googlemaps/google-maps-services-js": "^3.3.16",
