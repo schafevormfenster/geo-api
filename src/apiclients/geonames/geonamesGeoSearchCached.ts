@@ -14,8 +14,15 @@ const memoryCached = async (
   query: GeonamesGeoSearchQuery
 ): Promise<GeonamesSearchResult> => {
   try {
-    const queryAsString = toString(values(query));
-    const cacheKeyIdentifier = slugify(queryAsString, {
+    const queryAsString = toString(
+      values({
+        lat: query.geo.lat,
+        lng: query.geo.lng,
+        style: query.style,
+        radius: query.radius,
+      })
+    );
+    const cacheKeyIdentifier = slugify(queryAsString.split(",").join("_"), {
       lower: true,
       strict: true,
       trim: true,
