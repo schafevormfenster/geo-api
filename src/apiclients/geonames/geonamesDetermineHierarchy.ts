@@ -8,10 +8,12 @@ import {
   GeoAdministrativeMunicipality,
   GeoAdministrativePlace,
   GeoAdministrativeState,
+  GeoPoint,
 } from "../../types/GeoLocation/GeoLocation";
 import { GeonameExtended } from "./geonamesGet";
 import { getWikidataId } from "../../types/GeoLocation/helpers/getWikidataId";
 import { getName } from "../../types/GeoLocation/helpers/getName";
+import { geonamesGeoSearchCached } from "./geonamesGeoSearchCached";
 
 export type GeonamesDetermineHierarchyQuery = {
   place?: string;
@@ -20,6 +22,7 @@ export type GeonamesDetermineHierarchyQuery = {
   county: string;
   state: string;
   country: string;
+  geo?: GeoPoint;
 };
 
 export type GeonamesDetermineHierarchyResult =
@@ -218,8 +221,31 @@ export const geonamesDetermineHierarchy = async (
           };
         } else {
           console.info(
-            `No community found for ${query.community} even with less specific query`
+            `No community found for ${query.community} even with less specific query, try by geo coords`
           );
+          // try to find a populated place based on geo coordinates
+          if (query.geo?.lat && query.geo?.lng) {
+            const geonamesCommunityGeoCords: GeonameExtended | undefined = head(
+              await geonamesGeoSearchCached({
+                style: "FULL",
+                geo: {
+                  lat: query.geo.lat,
+                  lng: query.geo.lng,
+                },
+              })
+            );
+            if (geonamesCommunityGeoCords) {
+              community = {
+                geonameId: geonamesCommunityGeoCords.geonameId,
+                name: getName(geonamesCommunityGeoCords),
+                wikidataId: getWikidataId(geonamesCommunityGeoCords),
+              };
+            } else {
+              console.info(
+                `No community found for ${query.community} even by geo cords query`
+              );
+            }
+          }
         }
       }
     }

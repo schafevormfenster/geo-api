@@ -40,6 +40,7 @@ export interface GeoAdministrativeHierarchyItem {
   zip: string | null;
   code: string | null;
   class: string | null;
+  geo?: GeoPosition;
 }
 
 export type GeoAdministrativeCountry = Pick<
@@ -75,7 +76,7 @@ export interface GeoAdministrativeCommunity
 
 type GeoAdministrativePlaceBase = Pick<
   GeoAdministrativeHierarchyItem,
-  "geonameId" | "name" | "code" | "class"
+  "geonameId" | "name" | "code" | "class" | "geo"
 >;
 export interface GeoAdministrativePlace extends GeoAdministrativePlaceBase {
   wikidataId: string | null;

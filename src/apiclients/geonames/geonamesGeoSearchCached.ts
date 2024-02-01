@@ -1,21 +1,18 @@
 import { values, toString } from "lodash";
 import slugify from "slugify";
 import { localCache, remoteDatabaseCache } from "../../cache/cachemanager";
-import {
-  geonamesDetermineHierarchy,
-  GeonamesDetermineHierarchyQuery,
-  GeonamesDetermineHierarchyResult,
-} from "./geonamesDetermineHierarchy";
+import { GeonamesSearchResult } from "./geonamesSearch";
+import { GeonamesGeoSearchQuery, geonamesGeoSearch } from "./geonamesGeoSearch";
 import packageJson from "../../../package.json" assert { type: "json" };
 
 /**
  * Use a two layer cache.
- * @param query: GeonamesDetermineHierarchyQuery
- * @returns hierarchy: GeonamesDetermineHierarchyResult
+ * @param query: GeonamesGeoSearchQuery
+ * @returns
  */
 const memoryCached = async (
-  query: GeonamesDetermineHierarchyQuery
-): Promise<GeonamesDetermineHierarchyResult> => {
+  query: GeonamesGeoSearchQuery
+): Promise<GeonamesSearchResult> => {
   try {
     const queryAsString = toString(values(query));
     const cacheKeyIdentifier = slugify(queryAsString, {
@@ -28,15 +25,14 @@ const memoryCached = async (
       strict: true,
       trim: true,
     });
-    const cacheKey =
-      "geonames_determinehierarchy_" + version + "_" + cacheKeyIdentifier;
+    const cacheKey = "geonames_geosearch_" + version + "_" + cacheKeyIdentifier;
     console.debug(`[Cache] Check local cache for ${cacheKey}.`);
     return localCache.wrap(cacheKey, function () {
       try {
         console.debug(`[Cache] Check remote cache for ${cacheKey}.`);
         return remoteDatabaseCache.wrap(cacheKey, function () {
           console.info(`[Cache] Fetch original data for ${cacheKey}.`);
-          return geonamesDetermineHierarchy(query);
+          return geonamesGeoSearch(query);
         });
       } catch (error) {
         console.error((error as Error).message);
@@ -49,10 +45,9 @@ const memoryCached = async (
   }
 };
 
-export const geonamesDetermineHierarchyCached = async (
-  query: GeonamesDetermineHierarchyQuery
-): Promise<GeonamesDetermineHierarchyResult> => {
-  if (process.env.DEACTIVATE_CACHE === "true")
-    return geonamesDetermineHierarchy(query);
+export const geonamesGeoSearchCached = async (
+  query: GeonamesGeoSearchQuery
+): Promise<GeonamesSearchResult> => {
+  if (process.env.DEACTIVATE_CACHE === "true") return geonamesGeoSearch(query);
   return memoryCached(query);
 };

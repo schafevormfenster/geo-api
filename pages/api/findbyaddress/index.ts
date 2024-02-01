@@ -86,6 +86,12 @@ export default async function handler(
       code: null,
       class: null,
       wikidataId: null,
+      geo: {
+        point: {
+          lat: googlePlace.geometry?.location.lat as number,
+          lng: googlePlace.geometry?.location.lng as number,
+        },
+      },
     },
   };
 

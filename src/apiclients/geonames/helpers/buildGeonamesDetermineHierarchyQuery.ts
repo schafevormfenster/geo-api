@@ -21,6 +21,10 @@ export const buildGeonamesDetermineHierarchyQuery = (
       <string>geoAdministrativeHierarchy.country?.ISO3166 ||
       geoAdministrativeHierarchy.country?.name ||
       defaultCountry,
+    geo: {
+      lat: <number>geoAdministrativeHierarchy.place?.geo?.point?.lat,
+      lng: <number>geoAdministrativeHierarchy.place?.geo?.point?.lng,
+    },
   };
 
   return query;
