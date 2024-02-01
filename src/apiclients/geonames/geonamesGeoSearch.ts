@@ -35,6 +35,7 @@ export const geonamesGeoSearch = async (
       lat: query.geo.lat,
       lng: query.geo.lng,
       radius: query.radius || 5,
+      maxRows: 5,
       style: query.style || "SHORT",
       lang: "de",
     };
@@ -51,7 +52,6 @@ export const geonamesGeoSearch = async (
     if (results.length <= 0) return null;
 
     // return results
-    console.debug(results);
     return results;
   } catch (error) {
     console.error((error as Error).message);

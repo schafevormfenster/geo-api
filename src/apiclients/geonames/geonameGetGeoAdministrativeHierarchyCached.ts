@@ -6,6 +6,7 @@ import {
   GeonameGetGeoAdministrativeHierarchyResult,
   geonameGetGeoAdministrativeHierarchy,
 } from "./geonameGetGeoAdministrativeHierarchy";
+import packageJson from "../../../package.json" assert { type: "json" };
 
 /**
  * Use a two layer cache.
@@ -22,7 +23,13 @@ const memoryCached = async (
       strict: true,
       trim: true,
     });
-    const cacheKey = "geonames_gethierarchy_" + cacheKeyIdentifier;
+    const version = slugify(packageJson.version, {
+      lower: true,
+      strict: true,
+      trim: true,
+    });
+    const cacheKey =
+      "geonames_gethierarchy_" + version + "_" + cacheKeyIdentifier;
     console.debug(`[Cache] Check local cache for ${cacheKey}.`);
     return localCache.wrap(cacheKey, function () {
       try {

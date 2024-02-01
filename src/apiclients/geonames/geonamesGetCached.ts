@@ -1,5 +1,7 @@
 import { localCache, remoteDatabaseCache } from "../../cache/cachemanager";
 import { GeonameExtended, geonamesGet } from "./geonamesGet";
+import packageJson from "../../../package.json" assert { type: "json" };
+import slugify from "slugify";
 
 /**
  * Use a two layer cache.
@@ -10,7 +12,12 @@ const memoryCached = async (
   geonameId: number
 ): Promise<GeonameExtended | null> => {
   try {
-    const cacheKey = "geonames_get_" + geonameId;
+    const version = slugify(packageJson.version, {
+      lower: true,
+      strict: true,
+      trim: true,
+    });
+    const cacheKey = "geonames_get_" + version + "_" + geonameId;
     console.debug(`[Cache] Check local cache for ${cacheKey}.`);
     return localCache.wrap(cacheKey, function () {
       try {
