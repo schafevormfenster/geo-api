@@ -1,6 +1,6 @@
 # Geocoding API
 
-This api utilizes a google maps geocoding enhanced by a strict geonames.org entity evaluation.
+This api utilizes google maps for geocoding enhanced by a strict geonames.org entity evaluation.
 
 ## Development
 
