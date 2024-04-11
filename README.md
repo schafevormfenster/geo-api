@@ -2,6 +2,7 @@
 
 This api utilizes google maps for geocoding enhanced by a strict geonames.org entity evaluation.
 
+
 ## Development
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
